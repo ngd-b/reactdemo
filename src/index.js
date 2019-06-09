@@ -34,28 +34,25 @@ class Board extends React.Component {
   renderSquare(i) {
     return <Square value={this.props.squares[i]} onClick={()=>{this.props.onClick(i)}}/>;
   }
+  renderGrid([row=3,column=3]){
+    let grids = new Array(row);
+    for(let i=0;i<row;i++){
+      let cell = new Array(column);
+      for(let j=0;j<column;j++){
+        cell.push(this.renderSquare(i*column+j));
+      }
+      grids.push(<div className="board-row">{cell}</div>);
+    }
+    return  grids;
+  }
   render() {
       // const winner = calculateWinner(this.state.square);
       
     // const status = winner?"winner: "+winner:('Next player: '+(this.state.xIsNext?"X":"O"));
-
+    
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {this.renderGrid([3,3])}
       </div>
     );
   }
@@ -66,9 +63,12 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history:[{
-                squares:Array(9).fill(null)
+                squares:Array(9).fill(null),
+                target:[null,null]
             }],
+            // 处理下次操作的用户
             xIsNext:true,
+            // 当前跳转的步骤
             stepNumber:0,
         }
     }
@@ -89,6 +89,7 @@ class Game extends React.Component {
         this.setState({
             history:history.concat([{
                 squares:squares,
+                target:[i%3+1,Math.floor(i/3)+1]
             }]),
             xIsNext:!this.state.xIsNext,
             stepNumber:history.length
@@ -101,8 +102,10 @@ class Game extends React.Component {
       const status = winner?"winner: "+winner:('Next player: '+(this.state.xIsNext?"X":"O"));
       const moves = history.map((step,move)=>{
         const desc = move?"go to move #"+move:"go to game start";
-        return (<li key={move}>
-                <button onClick={()=>this.jumpTo(move)}>{desc}</button>
+        const pos =  move?"selected position:["+step.target+"]":"not selected";
+        return (<li key={move} className={this.state.stepNumber===move?"selected":""}>
+                <button  onClick={()=>this.jumpTo(move)}>{desc}</button>
+                <span style={{color:"red"}}>{pos}</span>
             </li>);
       });
     return (
