@@ -2,148 +2,61 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
+import {createStore} from 'redux';
+import reducers from './example/redux/reducers';
+// Mobx 实体信息
+import {UserList} from './example/mobxDemo/UserInfo';
+// react 示例
+import Game from './example/gameBord';
+// hook
+import HookForm from './example/component/HookInput.js';
+// 组件测试
+import HookDemo from './example/hookDemo/index';
+// react context 组件测试
+import ContextDemo from './example/contextDemo';
+// redux
+import ShowInfo from './example/redux';
+// react redux 组件使用
+import ReactReduxDemo from './example/reduxDemo';
+// react-router-dom
+import RouteDemo from "./example/routerDom";
+// mobx mobx-react 使用
+import MobxDemo from './example/mobxDemo';
 
-// class Square extends React.Component {
-//     constructor(props){
-//         super(props);
-//         this.state = {
-//             value:null,
-//         }
-//     }
-//   render() {
-//     return (
-//       <button 
-//         className="square" 
-//         onClick={()=>this.props.onClick()}>
-//         {this.props.value}
-//       </button>
-//     );
-//   }
-// }
-function Square(props){
-    return (
-    <button 
-        className="square" 
-        onClick={props.onClick}>
-        {props.value}
-    </button>
-    );
-}
-class Board extends React.Component {
-
-  renderSquare(i) {
-    return <Square value={this.props.squares[i]} onClick={()=>{this.props.onClick(i)}}/>;
-  }
-  renderGrid([row=3,column=3]){
-    let grids = new Array(row);
-    for(let i=0;i<row;i++){
-      let cell = new Array(column);
-      for(let j=0;j<column;j++){
-        cell.push(this.renderSquare(i*column+j));
-      }
-      grids.push(<div className="board-row">{cell}</div>);
-    }
-    return  grids;
-  }
-  render() {
-      // const winner = calculateWinner(this.state.square);
-      
-    // const status = winner?"winner: "+winner:('Next player: '+(this.state.xIsNext?"X":"O"));
-    
-    return (
-      <div>
-        {this.renderGrid([3,3])}
-      </div>
-    );
-  }
-}
-
-class Game extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            history:[{
-                squares:Array(9).fill(null),
-                target:[null,null]
-            }],
-            // 处理下次操作的用户
-            xIsNext:true,
-            // 当前跳转的步骤
-            stepNumber:0,
-        }
-    }
-    jumpTo(step){
-        this.setState({
-            stepNumber:step,
-            xIsNext:(step % 2)===0,
-        });
-    }
-    handleClick(i){
-        const  history = this.state.history.slice(0,this.state.stepNumber+1);
-        const curr  =  history[history.length-1];
-        const squares = curr.squares.slice();
-        if(calculateWinner(squares) || squares[i]){
-            return ;
-        }
-        squares[i] = this.state.xIsNext?"X":"O";
-        this.setState({
-            history:history.concat([{
-                squares:squares,
-                target:[i%3+1,Math.floor(i/3)+1]
-            }]),
-            xIsNext:!this.state.xIsNext,
-            stepNumber:history.length
-        }); 
-      }
-  render() {
-      const history = this.state.history;
-      const curr  =  history[this.state.stepNumber];
-      const winner = calculateWinner(curr.squares);
-      const status = winner?"winner: "+winner:('Next player: '+(this.state.xIsNext?"X":"O"));
-      const moves = history.map((step,move)=>{
-        const desc = move?"go to move #"+move:"go to game start";
-        const pos =  move?"selected position:["+step.target+"]":"not selected";
-        return (<li key={move} className={this.state.stepNumber===move?"selected":""}>
-                <button  onClick={()=>this.jumpTo(move)}>{desc}</button>
-                <span style={{color:"red"}}>{pos}</span>
-            </li>);
-      });
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board  squares={curr.squares} onClick={(i)=>this.handleClick(i)}/>
-        </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
-      </div>
-    );
-  }
-}
+let store = createStore(reducers);
+// react-router-dom  测试使
 
 // ========================================
+// 为了redux渲染，处理render
 
-ReactDOM.render(
-  <Game />,
+const render = ()=> ReactDOM.render(<div>
+    <h1>React 学习示例</h1>
+    <h2>Hook 示例</h2>
+    <HookForm />
+    <h2>react 示例demo</h2>
+    <Game />
+    <h2>React Hook 示例demo</h2>
+    <HookDemo name="我是王哈哈" />
+    <hr/>
+    <h2>React Context 示例demo</h2>
+    <ContextDemo />
+    <hr/>
+    <h2>React-Redux 实例demo</h2>
+    <ReactReduxDemo />
+    <hr/>
+    <h2>Redux 在react使用的示例demo</h2>
+    <ShowInfo  
+        infos={store.getState()}
+        addInfo={(name)=>store.dispatch({type:"ADD",name:name})}
+        deleteInfo={(id)=>store.dispatch({type:"DELETE",id:id})} />
+    <hr />
+    <h2>React-router-dom 测试使用</h2>
+    <RouteDemo />
+    <h2>Mobx/Mobx-react 使用示例</h2>
+    <MobxDemo  userList = {new UserList()}/>
+  </div>,
   document.getElementById('root')
 );
-function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
-  }
+
+render();
+store.subscribe(render);
