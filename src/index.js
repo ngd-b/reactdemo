@@ -22,6 +22,10 @@ import ReactReduxDemo from './example/reduxDemo';
 import RouteDemo from "./example/routerDom";
 // mobx mobx-react 使用
 import MobxDemo from './example/mobxDemo';
+// less 引入使用
+import LessDemo from './example/lessDemo';
+// 使用 typescript 
+import TSDemo from './example/tsDemo/index.tsx';
 
 let store = createStore(reducers);
 // react-router-dom  测试使
@@ -54,6 +58,10 @@ const render = ()=> ReactDOM.render(<div>
     <RouteDemo />
     <h2>Mobx/Mobx-react 使用示例</h2>
     <MobxDemo  userList = {new UserList()}/>
+    <h2>Less 引入使用示例</h2>
+    <LessDemo />
+    <h2>TS 引入使用</h2>
+    <TSDemo />
   </div>,
   document.getElementById('root')
 );
