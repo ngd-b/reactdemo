@@ -15,5 +15,12 @@ export default function(){
             <p className="less-box">
                 <p>多次使用`&`，多层嵌套</p>
             </p>
+            <p>将其他的选择样式复用至当前选择中
+                <span>内部嵌套子元素</span>
+            </p>
+            <p>merge 聚合属性，比如背景、动画等</p>
+            <p>Mixin 内部嵌套混合复用样式</p>
+            <p>Mixin 带参数处理，传入自定义属性值</p>
+            
         </div>);
 }

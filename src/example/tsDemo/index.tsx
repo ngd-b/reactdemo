@@ -4,7 +4,11 @@
 import React from 'react';
 import "./index.less";
 
-function TSDemo(props){
+interface userInfo{
+    name:String
+}
+
+function TSDemo(props:userInfo){
 
     return (<div>
             <p>{props.name}</p>
@@ -13,5 +17,5 @@ function TSDemo(props){
 
 export default function(){
 
-    return <TSDemo />
+    return <TSDemo name="admin" />
 }
