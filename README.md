@@ -220,3 +220,34 @@ export default function MobxDemo(){
 
 页面路由设置，点击跳转控制页面；
 
+### `less` 配置使用
+
+当前配置`less-loader` 只能使用 `5.0.0`版本配置，高版本配置报错；
+
+```js
+/**
+ * creat-react-app 覆盖配置
+ */
+const {
+    override,
+    addLessLoader,
+  } = require("customize-cra"); 
+
+module.exports = override(
+    addLessLoader({
+        javascriptEnabled:true,
+    }),
+    addWebpackAlias({
+        ["@Component"]:path.resolve(__dirname,'src/example'),
+        ["@Static"]:path.resolve(__dirname,'src/static')
+    })
+);
+```
+其他关于 `less API 使用` 查看[Less 使用小结](https://blog.csdn.net/heroboyluck/article/details/108628532);
+
+### 配置使用 `typescript` 
+
+### 使用 `redux-saga`
+
+
+

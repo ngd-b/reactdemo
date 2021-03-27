@@ -22,6 +22,7 @@ module.exports = override(
     ...addBabelPresets(["mobx"]),
     addWebpackAlias({
         ["@Component"]:path.resolve(__dirname,'src/example'),
-        ["@Static"]:path.resolve(__dirname,'src/static')
+        ["@Static"]:path.resolve(__dirname,'src/static'),
+        ["@API"]:path.resolve(__dirname,'src/API')
     })
 );

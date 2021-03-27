@@ -37,7 +37,8 @@ function GetStatus(props){
         let obj = childRef().getInfo();
         console.log(obj);
     }
-	return (<div>
+    return (<div>
+        <App />
         <p>{name+":"+props.name}</p>
         <ul>
             {hobby.map(item=>(<li key={item.toString()}>{item}</li>))}
@@ -85,5 +86,15 @@ function useOnlineStatus(flag){
 	},[flag]);
 	
 	return status;
+}
+function App(){
+    let [name,setName] = useState()
+    useEffect(()=>{
+        console.log('渲染')
+    })
+    return (<>
+        <input value={name} onChange={e=>setName(e.target.value)} />
+        <p>{name}</p>
+    </>)
 }
 export default GetStatus;

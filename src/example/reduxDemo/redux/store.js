@@ -1,5 +1,7 @@
-import {createStore} from 'redux';
+import {createStore,applyMiddleware} from 'redux';
+import createSagaMiddleware from 'redux-saga'
 
+import rootSaga from '../saga';
 // action type 
 import {UPDATE_USER,ADD_USER} from './actionType';
 
@@ -7,6 +9,10 @@ const initState = {
     allUser:[],
     userObj:{}
 }
+// saga 中间件应用，
+const sagaMiddleware = createSagaMiddleware();
+
+
 // store 对象处理
 function reducerUser(state=initState,action){
     switch(action.type){
@@ -39,4 +45,11 @@ function reducerUser(state=initState,action){
     }
 }
 
-export default createStore(reducerUser);
+const store = createStore(
+    reducerUser,
+    applyMiddleware(sagaMiddleware),
+);
+// 运行在 createStore 之后
+sagaMiddleware.run(rootSaga);
+
+export default store;
